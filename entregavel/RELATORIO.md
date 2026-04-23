@@ -115,16 +115,98 @@ Evidência:
 
 | # | Linha | Dimensão | Rótulo | Severidade |
 |---|-------|----------|--------|------------|
-| 1 |       |          |        |            |
-| 2 |       |          |        |            |
-| 3 |       |          |        |            |
-| 4 |       |          |        |            |
-| 5 |       |          |        |            |
-| 6 |       |          |        |            |
+| 1 |    4   |     Manutenibilidade      |    Código morto    |     Baixa            |
+| 2 |    11-12   |   Segurança              |  SQL Injection       |      Crítica         |
+| 3 |   Várias    |    Confiabilidade        |    Tratamento de erro    |    Média             |
+| 4 |   35-95    |     Manutenibilidade      |    Alta complexidade    |    Alta              |
+| 5 |   35-140    |    Manutenibilidade       |   Código duplicado      |     Média            |
+| 6 |       31          |    Legibilidade        |     Nome ruim       |     Baixa       |
 
 ### Findings detalhadas
+# 🧾 Relatório de Findings
 
-> Cole integralmente aqui suas findings copiadas do formulário.
+## Finding 1 — Constante não utilizada
+
+- **Linha:** 4  
+- **Dimensão:** Manutenibilidade  
+- **Rótulo:** Código morto  
+- **Severidade:** Baixa  
+
+A constante **TIPOS_VALIDOS** foi declarada, mas não está sendo utilizada para validar o tipo de usuário no cadastro, o que pode permitir dados inválidos no sistema.
+
+### Sugestão de correção
+Validar o tipo antes de cadastrar o usuário, verificando se está dentro dos valores permitidos.
+
+---
+
+## Finding 2 — SQL Injection
+
+- **Linha:** 11–12  
+- **Dimensão:** Segurança  
+- **Rótulo:** SQL Injection  
+- **Severidade:** Crítica  
+
+A query está sendo construída por concatenação de string, permitindo que um usuário malicioso injete código SQL.
+
+### Sugestão de correção
+Utilizar query parametrizada em vez de concatenação de string.
+
+---
+
+## Finding 3 — Falta de tratamento de erro
+
+- **Linha:** Várias funções assíncronas  
+- **Dimensão:** Confiabilidade  
+- **Rótulo:** Tratamento de erro ausente  
+- **Severidade:** Média  
+
+As funções assíncronas não possuem tratamento de erro (**try/catch**), o que pode causar falhas não tratadas caso ocorra erro no banco ou no processamento.
+
+### Sugestão de correção
+Adicionar blocos de **try/catch** e registrar os erros com o logger.
+
+---
+
+## Finding 4 — Alta complexidade ciclomática
+
+- **Linha:** 35–95  
+- **Dimensão:** Manutenibilidade  
+- **Rótulo:** Complexidade alta  
+- **Severidade:** Alta  
+
+A função **calcularLimiteEmprestimo** possui muitos níveis de **if/else**, tornando o código difícil de entender, testar e manter.
+
+### Sugestão de correção
+Refatorar a função utilizando funções auxiliares ou simplificando a lógica com retornos antecipados.
+
+---
+
+## Finding 5 — Código duplicado
+
+- **Linha:** 35–140  
+- **Dimensão:** Manutenibilidade  
+- **Rótulo:** Duplicação de código  
+- **Severidade:** Média  
+
+Existe duplicação de lógica entre as funções **calcularLimiteEmprestimo** e **calcularLimiteComSuspensao**, o que aumenta o custo de manutenção e o risco de inconsistência.
+
+### Sugestão de correção
+Extrair a lógica comum para uma função reutilizável.
+
+---
+
+## Finding 6 — Nome de variável pouco descritivo
+
+- **Linha:** 31  
+- **Dimensão:** Legibilidade  
+- **Rótulo:** Nome inadequado  
+- **Severidade:** Baixa  
+
+A variável **"u"** não é descritiva e dificulta o entendimento do código.
+
+### Sugestão de correção
+Renomear a variável para um nome mais claro, como **"usuario"**.
+
 
 ---
 
@@ -133,12 +215,12 @@ Evidência:
 > Responda em 1-2 parágrafos. Esta reflexão **é obrigatória**.
 
 **Qual dimensão do checklist foi mais difícil aplicar? Por quê?**
+A dimensão de **manutenibilidade** foi a mais difícil de aplicar, pois exige uma análise mais profunda da estrutura do código, como identificar complexidade excessiva e duplicação de lógica. Diferente de problemas de segurança ou validação, que são mais diretos de perceber, esses aspectos exigem mais experiência para avaliar impacto futuro e qualidade do código.
 
-[Escrevam aqui.]
+
 
 **O que vocês fariam diferente se revisassem o código novamente?**
-
-[Escrevam aqui.]
+Em uma nova revisão, aplicaríamos uma abordagem mais sistemática, seguindo o checklist desde o início e anotando os problemas já na primeira leitura. Também focaríamos mais em identificar padrões de repetição e possíveis melhorias de design, além de revisar com mais atenção os fluxos de dados e validações de entrada.
 
 ---
 
@@ -148,9 +230,9 @@ Evidência:
 ### Uso de IA como parceiro de trabalho
 
 - [ ] Não usamos IA nesta atividade.
-- [ ] Usamos IA para esclarecer conceitos teóricos.
-- [ ] Usamos IA para revisar a redação dos bug reports.
-- [ ] Usamos IA para discutir se um achado era ou não um defeito.
+- [ X] Usamos IA para esclarecer conceitos teóricos.
+- [ X] Usamos IA para revisar a redação dos bug reports.
+- [ X] Usamos IA para discutir se um achado era ou não um defeito.
 - [ ] Uso específico: [descreva]
 
 ### Declaração de autoria
